@@ -1,5 +1,3 @@
 target
-.idea
-*.iml
-maven-wrapper.jar
 pom.xml.versionsBackup
+maven-wrapper.jar
