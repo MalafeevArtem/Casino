@@ -12,5 +12,4 @@ build: clean
 	jar cfe ./target/Casino.jar games.Slot -C ./target/classes .
 
 update:
-	./mvnw versions:update-properties
-	./mvnw versions:display-plugin-updates
+	./mvnw versions:update-properties versions:display-plugin-updates
