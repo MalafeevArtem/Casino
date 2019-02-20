@@ -20,6 +20,8 @@
         <!--Libs-->
         <log4j-slf4j-impl.version>2.11.2</log4j-slf4j-impl.version>
         <apache-commons-math.version>3.6.1</apache-commons-math.version>
+        <sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
+
 
         <!--Plugins-->
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -28,6 +30,10 @@
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>3.6.0.1398</sonar-maven-plugin.version>
+        <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
+        <spotbugs.version>3.1.11</spotbugs.version>
+        <maven-pmd-plugin>3.11.0</maven-pmd-plugin>
+        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
 
     </properties>
 
@@ -165,6 +171,80 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+
+            <!-- (SpotBugs Maven) -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!-- (SonarQube Maven) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                    <rulesUri>file://${project.basedir}/maven-version-rules.xml</rulesUri>
+                </configuration>
+            </plugin>
+
+
+
+            <!-- (PMD Maven) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>maven-pmd-plugin</version>
+            </plugin>
+
+            <!-- (Apache Maven Checkstyle) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <checkstyleRules>
+                        <module name="Checker">
+                            <module name="FileLength">
+                                <property name="max" value="3500" />
+                                <property name="fileExtensions" value="java"/>
+                            </module>
+                            <module name="FileTabCharacter"/>
+
+                            <module name="TreeWalker">
+                                <module name="StaticVariableName"/>
+                                <module name="TypeName">
+                                    <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$"/>
+                                </module>
+                            </module>
+                        </module>
+                    </checkstyleRules>
                 </configuration>
             </plugin>
 
