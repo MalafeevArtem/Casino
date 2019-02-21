@@ -29,10 +29,10 @@
         <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-        <sonar-maven-plugin.version>3.6.0.1398</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
         <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
         <spotbugs.version>3.1.11</spotbugs.version>
-        <maven-pmd-plugin>3.11.0</maven-pmd-plugin>
+        <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
 
     </properties>
@@ -62,7 +62,6 @@
 
             <!-- COMPILER (Java10+ and lombok compatible) -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
@@ -81,7 +80,6 @@
 
             <!-- JAR with dependencies -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
                 <configuration>
@@ -128,7 +126,6 @@
 
             <!-- Minimum maven version -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-enforcer-plugin.version}</version>
                 <executions>
@@ -150,7 +147,6 @@
 
             <!-- SUREFIRE (compatible with JUnit 5+, Java 9+, Lombok) -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
@@ -166,13 +162,6 @@
                 <version>${sonar-maven-plugin.version}</version>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <configuration>
-                    <generateBackupPoms>false</generateBackupPoms>
-                </configuration>
-            </plugin>
 
             <!-- (SpotBugs Maven) -->
             <plugin>
@@ -188,6 +177,7 @@
                 </dependencies>
             </plugin>
 
+
             <!-- (SonarQube Maven) -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -202,14 +192,12 @@
 
             <!-- (PMD Maven) -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>maven-pmd-plugin</version>
+                <version>${maven-pmd-plugin.version}</version>
             </plugin>
 
             <!-- (Apache Maven Checkstyle) -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle-plugin.version}</version>
                 <executions>
