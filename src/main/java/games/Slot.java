@@ -6,7 +6,6 @@ import static java.lang.Math.round;
 public class Slot {
 
     public static void main(String... __) {
-        System.out.println("Hello World");
 
         int playerMoney = 100;
         int rateAmount = 10;
@@ -39,5 +38,7 @@ public class Slot {
                     playerMoney + "$");
             }
         }
+
     }
+
 }
