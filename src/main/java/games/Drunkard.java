@@ -2,9 +2,13 @@ package games;
 
 public class Drunkard {
 
+    private static final int PARS_TOTAL_COUNT = Par.values().length;
+
+    private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
+
     public static void main(String... __) {
 
-        System.out.println("Масть 36-й карты -" + getSuit(35));
+        System.out.println("Масть 36-й карты - " + getSuit(35));
         System.out.println("Размерность 36-й карты - " + getPar(35));
 
     }
@@ -29,10 +33,10 @@ public class Drunkard {
     }
 
     private static Suit getSuit(int cardNumber) {
-        return Suit.values()[cardNumber / 9];
+        return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
     }
 
     private static Par getPar(int cartNumber) {
-        return Par.values()[cartNumber % 9];
+        return Par.values()[cartNumber % PARS_TOTAL_COUNT];
     }
 }
