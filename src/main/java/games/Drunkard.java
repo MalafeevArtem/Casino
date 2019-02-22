@@ -1,15 +1,29 @@
 package games;
 
+import org.apache.commons.math3.util.MathArrays;
+
+import static org.apache.commons.math3.util.MathArrays.shuffle;
+
 public class Drunkard {
 
     private static final int PARS_TOTAL_COUNT = Par.values().length;
-
     private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
+    private static int[] firstPlayersCards = new int[CARDS_TOTAL_COUNT];
+    private static int[] secondPlayersCards = new int[CARDS_TOTAL_COUNT];
+    private static int[] deckOfCards = new int[CARDS_TOTAL_COUNT];
 
     public static void main(String... __) {
 
-        System.out.println("Масть 36-й карты - " + getSuit(35));
-        System.out.println("Размерность 36-й карты - " + getPar(35));
+        for (int i = 0; i < deckOfCards.length; i++) {
+            deckOfCards[i] = i;
+        }
+
+        MathArrays.shuffle(deckOfCards);
+
+        for (int i = 0; i < deckOfCards.length / 2; i++) {
+            firstPlayersCards[i] = deckOfCards[i];
+            secondPlayersCards[i] = deckOfCards[18 + i];
+        }
 
     }
 
@@ -39,4 +53,5 @@ public class Drunkard {
     private static Par getPar(int cartNumber) {
         return Par.values()[cartNumber % PARS_TOTAL_COUNT];
     }
+
 }
