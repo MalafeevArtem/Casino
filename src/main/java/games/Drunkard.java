@@ -1,10 +1,12 @@
 package games;
 
 import org.apache.commons.math3.util.MathArrays;
+import org.slf4j.Logger;
 
 
 public class Drunkard {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Drunkard.class);
 
     private static int[][] playersCards = new int[2][CardUtils.CARDS_TOTAL_COUNT + 1];
 
@@ -28,7 +30,7 @@ public class Drunkard {
         int counter = 1;
 
         while (true) {
-            System.out.println("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[player1][playersCardTails[player1]]) +
+            log.info("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[player1][playersCardTails[player1]]) +
                 "; Игрок №2 карта: " + CardUtils.toString(playersCards[player2][playersCardTails[player2]]));
 
             int result = moveWinner(playersCardTails[player1], playersCardTails[player2]);
@@ -36,20 +38,20 @@ public class Drunkard {
             switch (result) {
 
                 case 0: {
-                    System.out.println("Выиграл игрок №1\n");
+                    log.info("Выиграл игрок №1\n");
                     winFirstPlayer();
                     showCountOfCards(result);
                     break;
                 }
                 case 1: {
-                    System.out.println("Выиграл игрок №2\n");
+                    log.info("Выиграл игрок №2\n");
                     winSecondPlayer();
                     showCountOfCards(result);
                     break;
                 }
 
                 case 2: {
-                    System.out.println("Спор - каждый остается при своих\n");
+                    log.info("Спор - каждый остается при своих\n");
                     friendlyWon();
                     showCountOfCards(result);
                     break;
@@ -58,10 +60,10 @@ public class Drunkard {
 
 
             if (playerCardsIsEmpty(player1) && result == 0) {
-                System.out.println("Выиграл первый игрок. Количество произведенных итераций: " + counter);
+                log.info("Выиграл первый игрок. Количество произведенных итераций: " + counter);
                 break;
             } else if (playerCardsIsEmpty(player2) && result == 1) {
-                System.out.println("Выиграл второй игрок. Количество произведенных итераций:" + counter);
+                log.info("Выиграл второй игрок. Количество произведенных итераций:" + counter);
                 break;
             } else {
                 counter++;
@@ -129,19 +131,19 @@ public class Drunkard {
         int countCardsSecond = playersCardHeads[player2] - playersCardTails[player2];
 
         if (playerCardsIsEmpty(player1) && result == 0) {
-            System.out.print("У игрока №1 " + 36 + "карт; ");
+            log.info("У игрока №1 " + CardUtils.CARDS_TOTAL_COUNT + "карт; ");
         } else if (countCardsFirst >= 0) {
-            System.out.print("У игрока №1 " + countCardsFirst + "карт; ");
+            log.info("У игрока №1 " + countCardsFirst + "карт; ");
         } else {
-            System.out.print("У игрока №1 " + (playersCardHeads[player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player1]) + "карт; ");
+            log.info("У игрока №1 " + (playersCardHeads[player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player1]) + "карт; ");
         }
 
         if (playerCardsIsEmpty(player2) && result == 1) {
-            System.out.println("У игрока №1 " + 36 + "карт: ");
+            log.info("У игрока №2 " + 36 + "карт;");
         } else if (countCardsSecond >= 0) {
-            System.out.println(" У игрока №2 " + countCardsSecond + "карт;");
+            log.info("У игрока №2 " + countCardsSecond + "карт;");
         } else {
-            System.out.println(" У игрока №2 " + (playersCardHeads[player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player2]) + "карт;");
+            log.info("У игрока №2 " + (playersCardHeads[player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player2]) + "карт;");
         }
     }
 
@@ -160,17 +162,6 @@ public class Drunkard {
             playersCards[player1][index] = deckCards[index];
             playersCards[player2][index] = deckCards[deckCards.length / 2 + index];
         }
-
-    }
-
-    // Метод, который мешает колоду
-    private static void shufflingCards() {
-
-        for (int index = 0; index < deckCards.length; index++) {
-            deckCards[index] = index;
-        }
-
-        MathArrays.shuffle(deckCards);
 
     }
 

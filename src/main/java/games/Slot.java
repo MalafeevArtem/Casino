@@ -1,9 +1,13 @@
 package games;
 
+import org.slf4j.Logger;
+
 import static java.lang.Math.random;
 import static java.lang.Math.round;
 
 public class Slot {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Slot.class);
 
     public static void main(String... __) {
 
@@ -20,21 +24,21 @@ public class Slot {
             int secondDrumValue;
             int thirdDrumValue;
 
-            System.out.println("У Вас " + playerMoney + " $, ставка - " + rateAmount + "$");
-            System.out.println("Крутим барабаны!Розыгрыш принес следующие результаты:");
+            log.info("У Вас " + playerMoney + " $, ставка - " + rateAmount + "$");
+            log.info("Крутим барабаны!Розыгрыш принес следующие результаты:");
             firstDrumValue = (minValue + (int) round(random() * maxValue)) % size;
             secondDrumValue = (minValue + (int) round(random() * maxValue)) % size;
             thirdDrumValue = (minValue + (int) round(random() * maxValue)) % size;
-            System.out.println("первый барабан - " + firstDrumValue + ", второй - " + secondDrumValue +
+            log.info("первый барабан - " + firstDrumValue + ", второй - " + secondDrumValue +
                                 ", третий - " + thirdDrumValue);
 
             if ((firstDrumValue == secondDrumValue) && (firstDrumValue == thirdDrumValue)) {
                 playerMoney += winnerMoney;
-                System.out.println("Выигрыш " + winnerMoney + "$, ваш капитал теперь составляет: " +
+                log.info("Выигрыш " + winnerMoney + "$, ваш капитал теперь составляет: " +
                                 playerMoney + "$");
             } else {
                 playerMoney -= rateAmount;
-                System.out.println("Проигрыш " + rateAmount + "$, ваш капитал теперь составляет: " +
+                log.info("Проигрыш " + rateAmount + "$, ваш капитал теперь составляет: " +
                     playerMoney + "$");
             }
         }

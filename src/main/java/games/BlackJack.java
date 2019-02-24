@@ -1,9 +1,12 @@
 package games;
 
 import java.io.IOException;
+import org.slf4j.*;
 
 
 public class BlackJack {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BlackJack.class);
 
     private static int[] cards; // Основная колода
     private static int cursor; // Счётчик карт основной колоды
@@ -42,11 +45,10 @@ public class BlackJack {
 
             initRound();
 
-
             // Реализуем игру с игроком
             for (int index = 1; index < 3; index++) {
                 int card = addCard2Player(player1);
-                System.out.println("Вам выпала карта " + CardUtils.toString(card));
+                log.info("Вам выпала карта " + CardUtils.toString(card));
             }
 
             int sumFirstPlayer = sum(player1);
@@ -56,7 +58,7 @@ public class BlackJack {
                 if (confirm("Берем еще ?")) {
                     int card = addCard2Player(player1);
                     sumFirstPlayer = sum(player1);
-                    System.out.println("Вам выпала карта:" + CardUtils.toString(card));
+                    log.info("Вам выпала карта:" + CardUtils.toString(card));
                 } else {
                     break;
                 }
@@ -65,7 +67,7 @@ public class BlackJack {
             // Реализуем игру компьютера
             for (int index = 1; index < 3; index++) {
                 int card = addCard2Player(player2);
-                System.out.println("Компьютеру выпала карта " + CardUtils.toString(card));
+                log.info("Компьютеру выпала карта " + CardUtils.toString(card));
             }
 
             int sumSecondPlayer = sum(player2);
@@ -73,45 +75,45 @@ public class BlackJack {
             for (int index = 0; index < 5 && sumSecondPlayer < 17; index++) {
                     int card = addCard2Player(player2);
                     sumSecondPlayer = sum(player2);
-                    System.out.println("Компьютеру выпала карта:" + CardUtils.toString(card));
+                log.info("Компьютеру выпала карта:" + CardUtils.toString(card));
             }
 
             int finalSummPlayer1 = getFinalSum(player1);
             int finalSummPlayer2 = getFinalSum(player2);
 
-            System.out.println("Сумма ваших очков - " + finalSummPlayer1 + ", компьютера " +
+            log.info("Сумма ваших очков - " + finalSummPlayer1 + ", компьютера " +
                         finalSummPlayer2 + " очков");
 
             bankCalculation(finalSummPlayer1, finalSummPlayer2);
 
-            System.out.println("У вас " + playersMoney[player1] + "$ " +
+            log.info("У вас " + playersMoney[player1] + "$ " +
                         ", у компьютера " + playersMoney[player2] + "$ ");
         }
 
-        if (playersMoney[player1] > 0)
-            System.out.println("Вы выиграли! Поздравляем!");
-        else
-            System.out.println("Вы проиграли. Соболезнуем...");
+        if (playersMoney[player1] > 0) {
+            log.info("Вы выиграли! Поздравляем!");
+        } else
+            log.info("Вы проиграли. Соболезнуем...");
 
     }
 
     private static void bankCalculation(int sumPlayer1, int sumPlayer2) {
 
         if (sumPlayer1 > sumPlayer2) {
-            System.out.println("Вы выиграли раунд, получаете 10$");
+            log.info("Вы выиграли раунд, получаете 10$");
             playersMoney[player1] += bet;
             playersMoney[player2] -= bet;
         } else if (sumPlayer1 == sumPlayer2) {
-            System.out.println("В это раунде ничья");
+            log.info("В это раунде ничья");
         } else {
-            System.out.println("В этом раунде побеждает компьютер");
+            log.info("В этом раунде побеждает компьютер");
             playersMoney[player1] -= bet;
             playersMoney[player2] += bet;
         }
     }
 
     private static void initRound() {
-        System.out.println("\nУ Вас " + playersMoney[0] + "$, у компьютера - " + playersMoney[1] + "$. Начинаем новый раунд!");
+        log.info("\nУ Вас " + playersMoney[0] + "$, у компьютера - " + playersMoney[1] + "$. Начинаем новый раунд!");
         cards = CardUtils.getShaffledCards();
         playersCards = new int[2][MAX_CARDS_COUNT];
         playersCursors = new int[]{0, 0};
@@ -129,7 +131,7 @@ public class BlackJack {
     }
 
     // Метод, который считает сумму очков игрока.
-    static int sum(int player) {
+    private static int sum(int player) {
         int summPoints = 0;
         for (int index = 0; index < playersCursors[player]; index++) {
             summPoints += value(playersCards[player][index]);
@@ -137,7 +139,7 @@ public class BlackJack {
         return  summPoints;
     }
 
-    static int getFinalSum(int player) {
+    private static int getFinalSum(int player) {
         int finalSum = sum(player);
 
         if (finalSum <= MAX_VALUE) {
@@ -147,8 +149,8 @@ public class BlackJack {
         }
     }
 
-    static boolean confirm(String message) throws IOException {
-        System.out.println(message + " \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
+    private static boolean confirm(String message) throws IOException {
+        log.info(message + " \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
             case 'y': return true;
@@ -156,7 +158,7 @@ public class BlackJack {
         }
     }
 
-    static boolean moneyCheck() {
+    private static boolean moneyCheck() {
         return ((playersMoney[player1]) - bet < 0) || ((playersMoney[player2] - bet) < 0);
     }
 }
