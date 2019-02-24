@@ -1,6 +1,5 @@
 package games;
 
-import org.apache.commons.math3.util.MathArrays;
 import org.slf4j.Logger;
 
 
@@ -16,7 +15,7 @@ public class Drunkard {
     private static int player1 = 0;
     private static int player2 = 1;
 
-    private static int[] deckCards = CardUtils.getShaffledCards();
+    private static int[] deckCards = CardUtils.getShuffledCards();
 
     public static void main(String... __) {
 
@@ -30,8 +29,9 @@ public class Drunkard {
         int counter = 1;
 
         while (true) {
-            log.info("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[player1][playersCardTails[player1]]) +
-                "; Игрок №2 карта: " + CardUtils.toString(playersCards[player2][playersCardTails[player2]]));
+            log.info("Итерация {}! Игрок №1 карта: {}; Игрок №2 карта: {}", counter,
+                CardUtils.toString(playersCards[player1][playersCardTails[player1]]),
+                CardUtils.toString(playersCards[player2][playersCardTails[player2]]));
 
             int result = moveWinner(playersCardTails[player1], playersCardTails[player2]);
 
@@ -39,31 +39,33 @@ public class Drunkard {
 
                 case 0: {
                     log.info("Выиграл игрок №1\n");
-                    winFirstPlayer();
-                    showCountOfCards(result);
+                    someoneWon(player1, player2);
+                    showCountOfCards(player1, result);
+                    showCountOfCards(player2, result);
                     break;
                 }
                 case 1: {
                     log.info("Выиграл игрок №2\n");
-                    winSecondPlayer();
-                    showCountOfCards(result);
+                    someoneWon(player2, player1);
+                    showCountOfCards(player1, result);
+                    showCountOfCards(player2, result);
                     break;
                 }
 
                 case 2: {
                     log.info("Спор - каждый остается при своих\n");
                     friendlyWon();
-                    showCountOfCards(result);
+                    showCountOfCards(player1, result);
+                    showCountOfCards(player2, result);
                     break;
                 }
             }
 
-
             if (playerCardsIsEmpty(player1) && result == 0) {
-                log.info("Выиграл первый игрок. Количество произведенных итераций: " + counter);
+                log.info("Выиграл первый игрок. Количество произведенных итераций: {}", counter);
                 break;
             } else if (playerCardsIsEmpty(player2) && result == 1) {
-                log.info("Выиграл второй игрок. Количество произведенных итераций:" + counter);
+                log.info("Выиграл второй игрок. Количество произведенных итераций: {}", counter);
                 break;
             } else {
                 counter++;
@@ -90,27 +92,18 @@ public class Drunkard {
             return 1;
         }
     }
+    
+    private static void someoneWon(int winPlayer, int loserPlayer) {
 
-    private static void winFirstPlayer() {
+        playersCards[winPlayer][playersCardHeads[winPlayer]] = playersCardTails[winPlayer];
+        playersCards[winPlayer][playersCardHeads[winPlayer] + 1] = playersCardTails[loserPlayer];
+        playersCardTails[winPlayer] = incrementIndex(playersCardTails[winPlayer]);
 
-        playersCards[player1][playersCardHeads[player1]] = playersCardTails[player1];
-        playersCards[player1][playersCardHeads[player1] + 1] = playersCardTails[player2];
+        for (int index = 0; index < 2; index++) {
+            playersCardHeads[winPlayer] = incrementIndex(playersCardHeads[winPlayer]);
+        }
 
-        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
-        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
-        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
-        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
-    }
-
-    private static void winSecondPlayer() {
-
-        playersCards[player2][playersCardHeads[player2]] = playersCardTails[player2];
-        playersCards[player2][playersCardHeads[player2] + 1] = playersCardTails[player1];
-
-        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
-        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
-        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
-        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
+        playersCardTails[loserPlayer] = incrementIndex(playersCardTails[loserPlayer]);
 
     }
 
@@ -123,28 +116,21 @@ public class Drunkard {
         playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
         playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
         playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
+
     }
 
-    private static void showCountOfCards(int result) {
+    private static void showCountOfCards(int player, int result) {
 
-        int countCardsFirst = playersCardHeads[player1] - playersCardTails[player1];
-        int countCardsSecond = playersCardHeads[player2] - playersCardTails[player2];
+        int countCards = playersCardHeads[player] - playersCardTails[player];
 
-        if (playerCardsIsEmpty(player1) && result == 0) {
-            log.info("У игрока №1 " + CardUtils.CARDS_TOTAL_COUNT + "карт; ");
-        } else if (countCardsFirst >= 0) {
-            log.info("У игрока №1 " + countCardsFirst + "карт; ");
+        if (playerCardsIsEmpty(player) && result == player) {
+            log.info("У игрока №{} - {} карт;", player + 1, CardUtils.CARDS_TOTAL_COUNT);
+        } else if (countCards >= 0) {
+            log.info("У игрока №{} - {} карт;", player + 1, countCards);
         } else {
-            log.info("У игрока №1 " + (playersCardHeads[player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player1]) + "карт; ");
+            log.info("У игрока №{} - {} карт;", player + 1, CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player]);
         }
 
-        if (playerCardsIsEmpty(player2) && result == 1) {
-            log.info("У игрока №2 " + 36 + "карт;");
-        } else if (countCardsSecond >= 0) {
-            log.info("У игрока №2 " + countCardsSecond + "карт;");
-        } else {
-            log.info("У игрока №2 " + (playersCardHeads[player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player2]) + "карт;");
-        }
     }
 
     // Метод, который проверяет на пустоту колоды карт 

@@ -24,22 +24,19 @@ public class Slot {
             int secondDrumValue;
             int thirdDrumValue;
 
-            log.info("У Вас " + playerMoney + " $, ставка - " + rateAmount + "$");
+            log.info("У Вас {}$, ставка - {}$", playerMoney, rateAmount);
             log.info("Крутим барабаны!Розыгрыш принес следующие результаты:");
             firstDrumValue = (minValue + (int) round(random() * maxValue)) % size;
             secondDrumValue = (minValue + (int) round(random() * maxValue)) % size;
             thirdDrumValue = (minValue + (int) round(random() * maxValue)) % size;
-            log.info("первый барабан - " + firstDrumValue + ", второй - " + secondDrumValue +
-                                ", третий - " + thirdDrumValue);
+            log.info("первый барабан - {} второй - {}, третий - {}", firstDrumValue, secondDrumValue, thirdDrumValue);
 
             if ((firstDrumValue == secondDrumValue) && (firstDrumValue == thirdDrumValue)) {
                 playerMoney += winnerMoney;
-                log.info("Выигрыш " + winnerMoney + "$, ваш капитал теперь составляет: " +
-                                playerMoney + "$");
+                log.info("Выигрыш {}$, ваш капитал теперь составляет: {}$", winnerMoney, playerMoney);
             } else {
                 playerMoney -= rateAmount;
-                log.info("Проигрыш " + rateAmount + "$, ваш капитал теперь составляет: " +
-                    playerMoney + "$");
+                log.info("Проигрыш {}$, ваш капитал теперь составляет: {}$", rateAmount, playerMoney );
             }
         }
 
