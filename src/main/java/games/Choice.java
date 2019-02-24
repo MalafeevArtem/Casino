@@ -8,11 +8,11 @@ public class Choice {
 
     public static void main(String... __) throws IOException {
 
-        System.out.println("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\"");
+        System.out.println("Выберите игру:\n1 - \"однорукий бандит\", 2 - \"пьяница\", 3 - \"очко\"");
         switch (getCharacterFromUser()) {
             case '1': Slot.main(); break;
             case '2': Drunkard.main(); break;
-            case '3': break;
+            case '3': BlackJack.main();break;
             default: System.out.println("Игры с таким номером нет!");
         }
 

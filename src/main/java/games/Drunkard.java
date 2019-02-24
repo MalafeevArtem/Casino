@@ -11,8 +11,8 @@ public class Drunkard {
     private static int[] playersCardTails = new int[2];
     private static int[] playersCardHeads = new int[2];
 
-    private static int Player1 = 0;
-    private static int Player2 = 1;
+    private static int player1 = 0;
+    private static int player2 = 1;
 
     private static int[] deckCards = CardUtils.getShaffledCards();
 
@@ -20,18 +20,18 @@ public class Drunkard {
 
         distributionCards();
 
-        playersCardTails[Player1] = 0;
-        playersCardTails[Player2] = 0;
-        playersCardHeads[Player1] = deckCards.length / 2;
-        playersCardHeads[Player2] = deckCards.length / 2;
+        playersCardTails[player1] = 0;
+        playersCardTails[player2] = 0;
+        playersCardHeads[player1] = deckCards.length / 2;
+        playersCardHeads[player2] = deckCards.length / 2;
 
         int counter = 1;
 
         while (true) {
-            System.out.println("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[Player1][playersCardTails[Player1]]) +
-                "; Игрок №2 карта: " + CardUtils.toString(playersCards[Player2][playersCardTails[Player2]]));
+            System.out.println("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[player1][playersCardTails[player1]]) +
+                "; Игрок №2 карта: " + CardUtils.toString(playersCards[player2][playersCardTails[player2]]));
 
-            int result = moveWinner(playersCardTails[Player1], playersCardTails[Player2]);
+            int result = moveWinner(playersCardTails[player1], playersCardTails[player2]);
 
             switch (result) {
 
@@ -57,10 +57,10 @@ public class Drunkard {
             }
 
 
-            if (playerCardsIsEmpty(Player1) && result == 0) {
+            if (playerCardsIsEmpty(player1) && result == 0) {
                 System.out.println("Выиграл первый игрок. Количество произведенных итераций: " + counter);
                 break;
-            } else if (playerCardsIsEmpty(Player2) && result == 1) {
+            } else if (playerCardsIsEmpty(player2) && result == 1) {
                 System.out.println("Выиграл второй игрок. Количество произведенных итераций:" + counter);
                 break;
             } else {
@@ -73,8 +73,8 @@ public class Drunkard {
     // Метод проверки победиля хода
     private static int moveWinner(int cardFirstPlayer, int cardSecondPlayer) {
 
-        int valueFirstCard = getValueCard(playersCards[Player1][cardFirstPlayer]);
-        int valueSecondCard = getValueCard(playersCards[Player2][cardSecondPlayer]);
+        int valueFirstCard = getValueCard(playersCards[player1][cardFirstPlayer]);
+        int valueSecondCard = getValueCard(playersCards[player2][cardSecondPlayer]);
 
         if (valueFirstCard == 0 && valueSecondCard == 8) {
             return 0;
@@ -91,57 +91,57 @@ public class Drunkard {
 
     private static void winFirstPlayer() {
 
-        playersCards[Player1][playersCardHeads[Player1]] = playersCardTails[Player1];
-        playersCards[Player1][playersCardHeads[Player1] + 1] = playersCardTails[Player2];
+        playersCards[player1][playersCardHeads[player1]] = playersCardTails[player1];
+        playersCards[player1][playersCardHeads[player1] + 1] = playersCardTails[player2];
 
-        playersCardTails[Player1] = incrementIndex(playersCardTails[Player1]);
-        playersCardHeads[Player1] = incrementIndex(playersCardHeads[Player1]);
-        playersCardHeads[Player1] = incrementIndex(playersCardHeads[Player1]);
-        playersCardTails[Player2] = incrementIndex(playersCardTails[Player2]);
+        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
+        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
+        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
+        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
     }
 
     private static void winSecondPlayer() {
 
-        playersCards[Player2][playersCardHeads[Player2]] = playersCardTails[Player2];
-        playersCards[Player2][playersCardHeads[Player2] + 1] = playersCardTails[Player1];
+        playersCards[player2][playersCardHeads[player2]] = playersCardTails[player2];
+        playersCards[player2][playersCardHeads[player2] + 1] = playersCardTails[player1];
 
-        playersCardTails[Player2] = incrementIndex(playersCardTails[Player2]);
-        playersCardHeads[Player2] = incrementIndex(playersCardHeads[Player2]);
-        playersCardHeads[Player2] = incrementIndex(playersCardHeads[Player2]);
-        playersCardTails[Player1] = incrementIndex(playersCardTails[Player1]);
+        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
+        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
+        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
+        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
 
     }
 
     private static void friendlyWon() {
 
-        playersCards[Player1][playersCardHeads[Player1]] = playersCardTails[Player1];
-        playersCards[Player2][playersCardHeads[Player2]] = playersCardTails[Player2];
+        playersCards[player1][playersCardHeads[player1]] = playersCardTails[player1];
+        playersCards[player2][playersCardHeads[player2]] = playersCardTails[player2];
 
-        playersCardTails[Player1] = incrementIndex(playersCardTails[Player1]);
-        playersCardHeads[Player1] = incrementIndex(playersCardHeads[Player1]);
-        playersCardTails[Player2] = incrementIndex(playersCardTails[Player2]);
-        playersCardHeads[Player2] = incrementIndex(playersCardHeads[Player2]);
+        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
+        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
+        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
+        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
     }
 
     private static void showCountOfCards(int result) {
 
-        int countCardsFirst = playersCardHeads[Player1] - playersCardTails[Player1];
-        int countCardsSecond = playersCardHeads[Player2] - playersCardTails[Player2];
+        int countCardsFirst = playersCardHeads[player1] - playersCardTails[player1];
+        int countCardsSecond = playersCardHeads[player2] - playersCardTails[player2];
 
-        if (playerCardsIsEmpty(Player1) && result == 0) {
+        if (playerCardsIsEmpty(player1) && result == 0) {
             System.out.print("У игрока №1 " + 36 + "карт; ");
         } else if (countCardsFirst >= 0) {
             System.out.print("У игрока №1 " + countCardsFirst + "карт; ");
         } else {
-            System.out.print("У игрока №1 " + (playersCardHeads[Player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[Player1]) + "карт; ");
+            System.out.print("У игрока №1 " + (playersCardHeads[player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player1]) + "карт; ");
         }
 
-        if (playerCardsIsEmpty(Player2) && result == 1) {
+        if (playerCardsIsEmpty(player2) && result == 1) {
             System.out.println("У игрока №1 " + 36 + "карт: ");
         } else if (countCardsSecond >= 0) {
             System.out.println(" У игрока №2 " + countCardsSecond + "карт;");
         } else {
-            System.out.println(" У игрока №2 " + (playersCardHeads[Player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[Player2]) + "карт;");
+            System.out.println(" У игрока №2 " + (playersCardHeads[player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player2]) + "карт;");
         }
     }
 
@@ -157,8 +157,8 @@ public class Drunkard {
     private static void distributionCards() {
 
         for (int index = 0; index < deckCards.length / 2; index++) {
-            playersCards[Player1][index] = deckCards[index];
-            playersCards[Player2][index] = deckCards[deckCards.length / 2 + index];
+            playersCards[player1][index] = deckCards[index];
+            playersCards[player2][index] = deckCards[deckCards.length / 2 + index];
         }
 
     }
