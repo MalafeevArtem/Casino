@@ -2,17 +2,11 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
-import static org.apache.commons.math3.util.MathArrays.ebeMultiply;
-import static org.apache.commons.math3.util.MathArrays.shuffle;
 
 public class Drunkard {
 
 
-    private static final int PARS_TOTAL_COUNT = Par.values().length;
-
-    private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
-
-    private static int[][] playersCards = new int[2][CARDS_TOTAL_COUNT + 1];
+    private static int[][] playersCards = new int[2][CardUtils.CARDS_TOTAL_COUNT + 1];
 
     private static int[] playersCardTails = new int[2];
     private static int[] playersCardHeads = new int[2];
@@ -20,11 +14,10 @@ public class Drunkard {
     private static int Player1 = 0;
     private static int Player2 = 1;
 
-    private static int[] deckCards = new int[CARDS_TOTAL_COUNT];
+    private static int[] deckCards = CardUtils.getShaffledCards();
 
-    public static void main(String[] args) {
+    public static void main(String... __) {
 
-        shufflingCards();
         distributionCards();
 
         playersCardTails[Player1] = 0;
@@ -35,8 +28,8 @@ public class Drunkard {
         int counter = 1;
 
         while (true) {
-            System.out.println("Итерация " + counter + "! Игрок №1 карта: " + toString(playersCards[Player1][playersCardTails[Player1]]) +
-                "; Игрок №2 карта: " + toString(playersCards[Player2][playersCardTails[Player2]]));
+            System.out.println("Итерация " + counter + "! Игрок №1 карта: " + CardUtils.toString(playersCards[Player1][playersCardTails[Player1]]) +
+                "; Игрок №2 карта: " + CardUtils.toString(playersCards[Player2][playersCardTails[Player2]]));
 
             int result = moveWinner(playersCardTails[Player1], playersCardTails[Player2]);
 
@@ -47,7 +40,7 @@ public class Drunkard {
                     winFirstPlayer();
                     showCountOfCards(result);
                     break;
-             }
+                }
                 case 1: {
                     System.out.println("Выиграл игрок №2\n");
                     winSecondPlayer();
@@ -77,33 +70,13 @@ public class Drunkard {
         }
     }
 
-    enum Suit {
-        SPADES, // пики
-        HEARTS, // червы
-        CLUBS, // трефы
-        DIAMONDS // бубны
-    }
-
-    enum Par {
-        SIX,
-        SEVEN,
-        EIGHT,
-        NINE,
-        TEN,
-        JACK,
-        QUEEN,
-        KING,
-        AVE
-    }
-
-
     // Метод проверки победиля хода
     private static int moveWinner(int cardFirstPlayer, int cardSecondPlayer) {
 
         int valueFirstCard = getValueCard(playersCards[Player1][cardFirstPlayer]);
         int valueSecondCard = getValueCard(playersCards[Player2][cardSecondPlayer]);
 
-        if(valueFirstCard == 0 && valueSecondCard == 8) {
+        if (valueFirstCard == 0 && valueSecondCard == 8) {
             return 0;
         } else if (valueSecondCard == 0 && valueFirstCard == 8) {
             return 1;
@@ -160,15 +133,15 @@ public class Drunkard {
         } else if (countCardsFirst >= 0) {
             System.out.print("У игрока №1 " + countCardsFirst + "карт; ");
         } else {
-            System.out.print("У игрока №1 " + (playersCardHeads[Player1] + CARDS_TOTAL_COUNT - playersCardTails[Player1]) + "карт; ");
+            System.out.print("У игрока №1 " + (playersCardHeads[Player1] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[Player1]) + "карт; ");
         }
 
         if (playerCardsIsEmpty(Player2) && result == 1) {
-            System.out.println("У игрока №1 " + 36  + "карт: ");
+            System.out.println("У игрока №1 " + 36 + "карт: ");
         } else if (countCardsSecond >= 0) {
             System.out.println(" У игрока №2 " + countCardsSecond + "карт;");
         } else {
-            System.out.println(" У игрока №2 " + (playersCardHeads[Player2] + CARDS_TOTAL_COUNT - playersCardTails[Player2]) + "карт;");
+            System.out.println(" У игрока №2 " + (playersCardHeads[Player2] + CardUtils.CARDS_TOTAL_COUNT - playersCardTails[Player2]) + "карт;");
         }
     }
 
@@ -179,6 +152,7 @@ public class Drunkard {
 
         return tail == head;
     }
+
     // Методы, который раздает карты игрокам
     private static void distributionCards() {
 
@@ -202,27 +176,12 @@ public class Drunkard {
 
     // Метод возвращает размер карты
     private static int getValueCard(int cardNumber) {
-        return cardNumber % PARS_TOTAL_COUNT;
-    }
-
-    // Возвращает масть карты
-    private static Suit getSuit(int cardNumber) {
-        return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
-    }
-
-    // Возвращает размерность карты
-    private static Par getPar(int cardNumber) {
-        return Par.values()[cardNumber % PARS_TOTAL_COUNT];
-    }
-
-    // Информация о карте
-    private static String toString(int cardNumber) {
-        return getPar(cardNumber) + " " + getSuit(cardNumber);
+        return cardNumber % CardUtils.PARS_TOTAL_COUNT;
     }
 
     // Индекс карты
     private static int incrementIndex(int i) {
-        return (i + 1) % CARDS_TOTAL_COUNT;
+        return (i + 1) % CardUtils.CARDS_TOTAL_COUNT;
     }
 
 }
