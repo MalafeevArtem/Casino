@@ -9,10 +9,10 @@ public class CardUtils {
     static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
 
     enum Suit {
-        SPADES, // пики
-        HEARTS, // червы
-        CLUBS, // трефы
-        DIAMONDS // бубны
+        SPADES,
+        HEARTS,
+        CLUBS,
+        DIAMONDS
     }
 
     enum Par {
@@ -27,28 +27,24 @@ public class CardUtils {
         AVE
     }
 
-    // Возвращает масть карты
     static Suit getSuit(int cardNumber) {
         return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
     }
 
-    // Возвращает размерность карты
     static Par getPar(int cardNumber) {
         return Par.values()[cardNumber % PARS_TOTAL_COUNT];
     }
 
-    // Информация о карте
     static String toString(int cardNumber) {
         return getPar(cardNumber) + " " + getSuit(cardNumber);
     }
 
     static int[] getShuffledCards() {
-        // колода подряд
         int[] cards = {
-            0, 1, 2, 3, 4, 5, 6, 7, 8,  // бубны
-            9, 10, 11, 12, 13, 14, 15, 16, 17,  // червы
-            18, 19, 20, 21, 22, 23, 24, 25, 26,  // трефы
-            27, 28, 29, 30, 31, 32, 33, 34, 35}; // пики
+            0, 1, 2, 3, 4, 5, 6, 7, 8,
+            9, 10, 11, 12, 13, 14, 15, 16, 17,
+            18, 19, 20, 21, 22, 23, 24, 25, 26,
+            27, 28, 29, 30, 31, 32, 33, 34, 35};
 
         MathArrays.shuffle(cards);
         return cards;

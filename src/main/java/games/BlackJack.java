@@ -8,20 +8,22 @@ public class BlackJack {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(BlackJack.class);
 
-    private static int[] cards; // Основная колода
-    private static int cursor; // Счётчик карт основной колоды
+    private static int[] cards;
+    private static int cursor;
 
-    private static int[][] playersCards; // карты игроков. Первый индекс - номер игрока
-    private static int[] playersCursors; // курсоры карт игроков. Индекс - номер игрока
+    private static int[][] playersCards;
+    private static int[] playersCursors;
 
     private static final int MAX_VALUE = 21;
     private static final int MAX_CARDS_COUNT = 8;
+
     private static final int MIN_VALUE_PLAYER = 11;
+    private static final int MIN_VALUE_COMP = 16;
 
-    private static int player1 = 0;
-    private static int player2 = 1;
+    private final static int PLAYER = 0;
+    private final static int COMPUTER = 1;
 
-    private static int bet = 10;
+    private final static int BET = 10;
 
     private static int[] playersMoney = {100, 100};
 
@@ -46,91 +48,72 @@ public class BlackJack {
 
             initRound();
 
-            // Реализуем игру с игроком
-            int sumFirstPlayer;
+            int sumPlayer;
+
             do {
-                giveOneCard(player1);
-                sumFirstPlayer = sum(player1);
+                giveOneCard(PLAYER);
+                sumPlayer = sumPointsPlayer(PLAYER);
             }
-            while (situationCheckPlayer(sumFirstPlayer));
+            while (sumPlayer < MIN_VALUE_PLAYER || sumPlayer < MAX_VALUE
+            && sumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
 
-            // Реализуем игру компьютера
-            int sumSecondPlayer;
+            int sumComputer;
+
             do {
-                giveOneCard(player2);
-                sumSecondPlayer = sum(player2);
+                giveOneCard(COMPUTER);
+                sumComputer = sumPointsPlayer(COMPUTER);
             }
-            while (situationCheckComp(sumSecondPlayer));
+            while (sumComputer < MIN_VALUE_COMP);
 
+            int finalSumPlayer = getFinalSum(PLAYER);
+            int finalSumComputer = getFinalSum(COMPUTER);
 
-            int finalSummPlayer1 = getFinalSum(player1);
-            int finalSummPlayer2 = getFinalSum(player2);
+            log.info("Сумма ваших очков - {}, компьютера {} очков", finalSumPlayer,finalSumComputer);
 
-            log.info("Сумма ваших очков - {}, компьютера {} очков", finalSummPlayer1,finalSummPlayer2);
+            bankCalculation(finalSumPlayer, finalSumComputer);
 
-            bankCalculation(finalSummPlayer1, finalSummPlayer2);
-
-            log.info("У вас {}$, у компьютера {}$ ", playersMoney[player1], playersMoney[player2]);
+            log.info("У вас {}$, у компьютера {}$ ", playersMoney[PLAYER], playersMoney[COMPUTER]);
         }
 
-        if (playersMoney[player1] > 0) {
+        if (playersMoney[PLAYER] > 0)
             log.info("Вы выиграли! Поздравляем!");
-        } else
+        else
             log.info("Вы проиграли. Соболезнуем...");
 
     }
 
-    private static boolean situationCheckPlayer(int sum) throws IOException {
-
-        if (sum < MIN_VALUE_PLAYER && sum < MAX_VALUE) {
-            return true;
-        } else if (sum < MAX_VALUE && sum > MIN_VALUE_PLAYER) {
-            if (confirm("Берем еще ?")) return true;
-            else return false;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean situationCheckComp(int sum) {
-        if (sum < MAX_VALUE && sum < 17) return true;
-        else return false;
-    }
-
     private static void giveOneCard(int player) {
             int card = addCard2Player(player);
-            if (player == player1) {
+
+            if (player == PLAYER)
                 log.info("Вам выпала карта: {}", CardUtils.toString(card));
-            } else {
+            else
                 log.info("Компьютеру выпала карта: {}", CardUtils.toString(card));
-        }
     }
 
-    private static void bankCalculation(int sumPlayer1, int sumPlayer2) {
-
-        if (sumPlayer1 > sumPlayer2) {
+    private static void bankCalculation(int sumPlayer, int sumComputer) {
+        if (sumPlayer > sumComputer) {
             log.info("Вы выиграли раунд, получаете 10$");
-            playersMoney[player1] += bet;
-            playersMoney[player2] -= bet;
-        } else if (sumPlayer1 == sumPlayer2) {
+            playersMoney[PLAYER] += BET;
+            playersMoney[COMPUTER] -= BET;
+        } else if (sumPlayer == sumComputer) {
             log.info("В это раунде ничья");
         } else {
             log.info("В этом раунде побеждает компьютер");
-            playersMoney[player1] -= bet;
-            playersMoney[player2] += bet;
+            playersMoney[PLAYER] -= BET;
+            playersMoney[COMPUTER] += BET;
         }
     }
 
     private static void initRound() {
-        log.info("\nУ Вас {}$, у компьютера - {}$. Начинаем новый раунд!", playersMoney[0], playersMoney[1]);
+        log.info("\nУ Вас {}$, у компьютера - {}$. Начинаем новый раунд!", playersMoney[PLAYER], playersMoney[COMPUTER]);
         cards = CardUtils.getShuffledCards();
         playersCards = new int[2][MAX_CARDS_COUNT];
-        playersCursors = new int[]{0, 0};
+        playersCursors = new int[2];
         cursor = 0;
     }
 
     private static int addCard2Player(int player) {
-
         int cardIndex = cards[cursor];
         playersCards[player][playersCursors[player]] = cardIndex;
         cursor++;
@@ -140,26 +123,26 @@ public class BlackJack {
     }
 
     // Метод, который считает сумму очков игрока.
-    private static int sum(int player) {
+    private static int sumPointsPlayer(int player) {
         int summPoints = 0;
-        for (int index = 0; index < playersCursors[player]; index++) {
+
+        for (int index = 0; index < playersCursors[player]; index++)
             summPoints += value(playersCards[player][index]);
-        }
+
         return  summPoints;
     }
 
     private static int getFinalSum(int player) {
-        int finalSum = sum(player);
+        int finalSum = sumPointsPlayer(player);
 
-        if (finalSum <= MAX_VALUE) {
+        if (finalSum <= MAX_VALUE)
             return finalSum;
-        } else {
+        else
             return 0;
-        }
     }
 
     private static boolean confirm(String message) throws IOException {
-        log.info(message + " \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
+        log.info(" {} \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)", message);
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
             case 'y': return true;
@@ -168,6 +151,6 @@ public class BlackJack {
     }
 
     private static boolean moneyCheck() {
-        return ((playersMoney[player1]) - bet < 0) || ((playersMoney[player2] - bet) < 0);
+        return ((playersMoney[PLAYER]) - BET < 0) || ((playersMoney[COMPUTER] - BET) < 0);
     }
 }

@@ -12,59 +12,52 @@ public class Drunkard {
     private static int[] playersCardTails = new int[2];
     private static int[] playersCardHeads = new int[2];
 
-    private static int player1 = 0;
-    private static int player2 = 1;
-
-    private static int[] deckCards = CardUtils.getShuffledCards();
+    private final static int PLAYER_1 = 0;
+    private final static int PLAYER_2 = 1;
 
     public static void main(String... __) {
 
-        distributionCards();
+        init();
 
-        playersCardTails[player1] = 0;
-        playersCardTails[player2] = 0;
-        playersCardHeads[player1] = deckCards.length / 2;
-        playersCardHeads[player2] = deckCards.length / 2;
 
         int counter = 1;
 
         while (true) {
-            log.info("Итерация {}! Игрок №1 карта: {}; Игрок №2 карта: {}", counter,
-                CardUtils.toString(playersCards[player1][playersCardTails[player1]]),
-                CardUtils.toString(playersCards[player2][playersCardTails[player2]]));
 
-            int result = moveWinner(playersCardTails[player1], playersCardTails[player2]);
+            log.info("Итерация {}! Игрок №1 карта: {}; Игрок №2 карта: {}", counter,
+                CardUtils.toString(playersCards[PLAYER_1][playersCardTails[PLAYER_1]]),
+                CardUtils.toString(playersCards[PLAYER_2][playersCardTails[PLAYER_2]]));
+
+            int result = moveWinner(playersCardTails[PLAYER_1], playersCardTails[PLAYER_2]);
 
             switch (result) {
 
-                case 0: {
+                case 0:
                     log.info("Выиграл игрок №1\n");
-                    someoneWon(player1, player2);
-                    showCountOfCards(player1, result);
-                    showCountOfCards(player2, result);
+                    someoneWon(PLAYER_1, PLAYER_2);
+                    showCountOfCards(PLAYER_1, result);
+                    showCountOfCards(PLAYER_2, result);
                     break;
-                }
-                case 1: {
-                    log.info("Выиграл игрок №2\n");
-                    someoneWon(player2, player1);
-                    showCountOfCards(player1, result);
-                    showCountOfCards(player2, result);
-                    break;
-                }
 
-                case 2: {
+                case 1:
+                    log.info("Выиграл игрок №2\n");
+                    someoneWon(PLAYER_2, PLAYER_1);
+                    showCountOfCards(PLAYER_1, result);
+                    showCountOfCards(PLAYER_2, result);
+                    break;
+
+                case 2:
                     log.info("Спор - каждый остается при своих\n");
                     friendlyWon();
-                    showCountOfCards(player1, result);
-                    showCountOfCards(player2, result);
+                    showCountOfCards(PLAYER_1, result);
+                    showCountOfCards(PLAYER_2, result);
                     break;
-                }
             }
 
-            if (playerCardsIsEmpty(player1) && result == 0) {
+            if (playerCardsIsEmpty(PLAYER_1) && result == 0) {
                 log.info("Выиграл первый игрок. Количество произведенных итераций: {}", counter);
                 break;
-            } else if (playerCardsIsEmpty(player2) && result == 1) {
+            } else if (playerCardsIsEmpty(PLAYER_2) && result == 1) {
                 log.info("Выиграл второй игрок. Количество произведенных итераций: {}", counter);
                 break;
             } else {
@@ -77,8 +70,8 @@ public class Drunkard {
     // Метод проверки победиля хода
     private static int moveWinner(int cardFirstPlayer, int cardSecondPlayer) {
 
-        int valueFirstCard = getValueCard(playersCards[player1][cardFirstPlayer]);
-        int valueSecondCard = getValueCard(playersCards[player2][cardSecondPlayer]);
+        int valueFirstCard = getValueCard(playersCards[PLAYER_1][cardFirstPlayer]);
+        int valueSecondCard = getValueCard(playersCards[PLAYER_2][cardSecondPlayer]);
 
         if (valueFirstCard == 0 && valueSecondCard == 8) {
             return 0;
@@ -94,7 +87,6 @@ public class Drunkard {
     }
     
     private static void someoneWon(int winPlayer, int loserPlayer) {
-
         playersCards[winPlayer][playersCardHeads[winPlayer]] = playersCardTails[winPlayer];
         playersCards[winPlayer][playersCardHeads[winPlayer] + 1] = playersCardTails[loserPlayer];
         playersCardTails[winPlayer] = incrementIndex(playersCardTails[winPlayer]);
@@ -104,23 +96,20 @@ public class Drunkard {
         }
 
         playersCardTails[loserPlayer] = incrementIndex(playersCardTails[loserPlayer]);
-
     }
 
     private static void friendlyWon() {
+        playersCards[PLAYER_1][playersCardHeads[PLAYER_1]] = playersCardTails[PLAYER_1];
+        playersCards[PLAYER_2][playersCardHeads[PLAYER_2]] = playersCardTails[PLAYER_2];
 
-        playersCards[player1][playersCardHeads[player1]] = playersCardTails[player1];
-        playersCards[player2][playersCardHeads[player2]] = playersCardTails[player2];
-
-        playersCardTails[player1] = incrementIndex(playersCardTails[player1]);
-        playersCardHeads[player1] = incrementIndex(playersCardHeads[player1]);
-        playersCardTails[player2] = incrementIndex(playersCardTails[player2]);
-        playersCardHeads[player2] = incrementIndex(playersCardHeads[player2]);
-
+        playersCardTails[PLAYER_1] = incrementIndex(playersCardTails[PLAYER_1]);
+        playersCardHeads[PLAYER_1] = incrementIndex(playersCardHeads[PLAYER_1]);
+        playersCardTails[PLAYER_2] = incrementIndex(playersCardTails[PLAYER_2]);
+        playersCardHeads[PLAYER_2] = incrementIndex(playersCardHeads[PLAYER_2]);
     }
 
-    private static void showCountOfCards(int player, int result) {
 
+    private static void showCountOfCards(int player, int result) {
         int countCards = playersCardHeads[player] - playersCardTails[player];
 
         if (playerCardsIsEmpty(player) && result == player) {
@@ -130,10 +119,8 @@ public class Drunkard {
         } else {
             log.info("У игрока №{} - {} карт;", player + 1, CardUtils.CARDS_TOTAL_COUNT - playersCardTails[player]);
         }
-
     }
 
-    // Метод, который проверяет на пустоту колоды карт 
     private static boolean playerCardsIsEmpty(int playerIndex) {
         int tail = playersCardTails[playerIndex];
         int head = playersCardHeads[playerIndex];
@@ -141,22 +128,19 @@ public class Drunkard {
         return tail == head;
     }
 
-    // Методы, который раздает карты игрокам
-    private static void distributionCards() {
+    private static void init() {
+        int[] deckCards = CardUtils.getShuffledCards();
 
-        for (int index = 0; index < deckCards.length / 2; index++) {
-            playersCards[player1][index] = deckCards[index];
-            playersCards[player2][index] = deckCards[deckCards.length / 2 + index];
-        }
+        for (int i = 0; i < deckCards.length; i++)
+            playersCards[i % 2][i / 2] = deckCards[i];
 
+        playersCardHeads[PLAYER_1] = playersCardHeads[PLAYER_2] = deckCards.length / 2;
     }
 
-    // Метод возвращает размер карты
     private static int getValueCard(int cardNumber) {
         return cardNumber % CardUtils.PARS_TOTAL_COUNT;
     }
 
-    // Индекс карты
     private static int incrementIndex(int i) {
         return (i + 1) % CardUtils.CARDS_TOTAL_COUNT;
     }
