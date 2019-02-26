@@ -93,7 +93,7 @@ public class BlackJack {
 
     private static void bankCalculation(int sumPlayer, int sumComputer) {
         if (sumPlayer > sumComputer) {
-            log.info("Вы выиграли раунд, получаете 10$");
+            log.info("Вы выиграли раунд, получаете {}$", BET);
             playersMoney[PLAYER] += BET;
             playersMoney[COMPUTER] -= BET;
         } else if (sumPlayer == sumComputer) {
@@ -122,23 +122,20 @@ public class BlackJack {
         return cardIndex;
     }
 
-    // Метод, который считает сумму очков игрока.
+
     private static int sumPointsPlayer(int player) {
-        int summPoints = 0;
+        int sumPoints = 0;
 
         for (int index = 0; index < playersCursors[player]; index++)
-            summPoints += value(playersCards[player][index]);
+            sumPoints += value(playersCards[player][index]);
 
-        return  summPoints;
+        return  sumPoints;
     }
 
     private static int getFinalSum(int player) {
         int finalSum = sumPointsPlayer(player);
 
-        if (finalSum <= MAX_VALUE)
-            return finalSum;
-        else
-            return 0;
+        return finalSum <= MAX_VALUE ? finalSum : 0;
     }
 
     private static boolean confirm(String message) throws IOException {
@@ -151,6 +148,6 @@ public class BlackJack {
     }
 
     private static boolean moneyCheck() {
-        return ((playersMoney[PLAYER]) - BET < 0) || ((playersMoney[COMPUTER] - BET) < 0);
+        return playersMoney[PLAYER] - BET < 0 || playersMoney[COMPUTER] - BET < 0;
     }
 }
