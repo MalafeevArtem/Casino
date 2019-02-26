@@ -19,16 +19,16 @@ public class Drunkard {
 
         init();
 
-
         int counter = 1;
+        int result = 0;
 
-        while (true) {
+        while (!(playerCardsIsEmpty(PLAYER_1) || playerCardsIsEmpty(PLAYER_2))) {
 
             log.info("Итерация {}! Игрок №1 карта: {}; Игрок №2 карта: {}", counter,
                 CardUtils.toString(playersCards[PLAYER_1][playersCardTails[PLAYER_1]]),
                 CardUtils.toString(playersCards[PLAYER_2][playersCardTails[PLAYER_2]]));
 
-            int result = moveWinner(playersCardTails[PLAYER_1], playersCardTails[PLAYER_2]);
+            result = moveWinner(playersCardTails[PLAYER_1], playersCardTails[PLAYER_2]);
 
             switch (result) {
 
@@ -37,6 +37,7 @@ public class Drunkard {
                     someoneWon(PLAYER_1, PLAYER_2);
                     showCountOfCards(PLAYER_1, result);
                     showCountOfCards(PLAYER_2, result);
+                    counter++;
                     break;
 
                 case 1:
@@ -44,6 +45,7 @@ public class Drunkard {
                     someoneWon(PLAYER_2, PLAYER_1);
                     showCountOfCards(PLAYER_1, result);
                     showCountOfCards(PLAYER_2, result);
+                    counter++;
                     break;
 
                 case 2:
@@ -51,23 +53,17 @@ public class Drunkard {
                     friendlyWon();
                     showCountOfCards(PLAYER_1, result);
                     showCountOfCards(PLAYER_2, result);
+                    counter++;
                     break;
             }
-
-            if (playerCardsIsEmpty(PLAYER_1) && result == 0) {
-                log.info("Выиграл первый игрок. Количество произведенных итераций: {}", counter);
-                break;
-            } else if (playerCardsIsEmpty(PLAYER_2) && result == 1) {
-                log.info("Выиграл второй игрок. Количество произведенных итераций: {}", counter);
-                break;
-            } else {
-                counter++;
-            }
-
         }
-    }
 
-    // Метод проверки победиля хода
+        if (result == 0)
+            log.info("Выиграл первый игрок. Количество произведенных итераций: {}", counter);
+        else
+            log.info("Выиграл второй игрок. Количество произведенных итераций: {}", counter);
+    }
+    
     private static int moveWinner(int cardFirstPlayer, int cardSecondPlayer) {
 
         int valueFirstCard = getValueCard(playersCards[PLAYER_1][cardFirstPlayer]);

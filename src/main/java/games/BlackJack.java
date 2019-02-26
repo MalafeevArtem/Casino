@@ -20,10 +20,10 @@ public class BlackJack {
     private static final int MIN_VALUE_PLAYER = 11;
     private static final int MIN_VALUE_COMP = 16;
 
-    private final static int PLAYER = 0;
-    private final static int COMPUTER = 1;
+    private static final int PLAYER = 0;
+    private static final int COMPUTER = 1;
 
-    private final static int BET = 10;
+    private static final int BET = 10;
 
     private static int[] playersMoney = {100, 100};
 
