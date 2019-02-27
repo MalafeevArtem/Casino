@@ -54,7 +54,7 @@ public class BlackJack {
                 giveOneCard(PLAYER);
                 finalSumPlayer = getFinalSum(PLAYER);
             }
-            while (finalSumPlayer < MIN_VALUE_PLAYER || finalSumPlayer < MAX_VALUE
+            while (finalSumPlayer != 0 && finalSumPlayer < MIN_VALUE_PLAYER || finalSumPlayer < MAX_VALUE
             && finalSumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
 
             int finalSumComputer;
@@ -63,7 +63,7 @@ public class BlackJack {
                 giveOneCard(COMPUTER);
                 finalSumComputer = getFinalSum(COMPUTER);
             }
-            while (finalSumComputer < MIN_VALUE_COMP);
+            while (finalSumComputer != 0 && finalSumComputer < MIN_VALUE_COMP);
 
             log.info("Сумма ваших очков - {}, компьютера {} очков", finalSumPlayer,finalSumComputer);
 
