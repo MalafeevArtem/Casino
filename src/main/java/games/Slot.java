@@ -36,14 +36,7 @@ public class Slot {
                 log.info("Выигрыш {}$, ваш капитал теперь составляет: {}$", winnerMoney, playerMoney);
             } else {
                 playerMoney -= rateAmount;
-                log.info("Проигрыш {}$, ваш капитал теперь составляет: {}" +
-                    " " +
-                    "      и    " +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "$", rateAmount, playerMoney );
+                log.info("Проигрыш {}$, ваш капитал теперь составляет: {}$", rateAmount, playerMoney );
             }
         }
 
