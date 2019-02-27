@@ -44,29 +44,26 @@ public class BlackJack {
 
     public static void main(String... __) throws IOException {
 
-        while (!moneyCheck()) {
+        do {
 
             initRound();
 
-            int sumPlayer;
+            int finalSumPlayer;
 
             do {
                 giveOneCard(PLAYER);
-                sumPlayer = sumPointsPlayer(PLAYER);
+                finalSumPlayer = getFinalSum(PLAYER);
             }
-            while (sumPlayer < MIN_VALUE_PLAYER || sumPlayer < MAX_VALUE
-            && sumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
+            while (finalSumPlayer != 0 && finalSumPlayer < MIN_VALUE_PLAYER || finalSumPlayer < MAX_VALUE
+            && finalSumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
 
-            int sumComputer;
+            int finalSumComputer;
 
             do {
                 giveOneCard(COMPUTER);
-                sumComputer = sumPointsPlayer(COMPUTER);
+                finalSumComputer = getFinalSum(COMPUTER);
             }
-            while (sumComputer < MIN_VALUE_COMP);
-
-            int finalSumPlayer = getFinalSum(PLAYER);
-            int finalSumComputer = getFinalSum(COMPUTER);
+            while (finalSumComputer != 0 && finalSumComputer < MIN_VALUE_COMP);
 
             log.info("Сумма ваших очков - {}, компьютера {} очков", finalSumPlayer,finalSumComputer);
 
@@ -74,6 +71,8 @@ public class BlackJack {
 
             log.info("У вас {}$, у компьютера {}$ ", playersMoney[PLAYER], playersMoney[COMPUTER]);
         }
+
+        while (!moneyCheck());
 
         if (playersMoney[PLAYER] > 0)
             log.info("Вы выиграли! Поздравляем!");

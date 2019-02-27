@@ -24,8 +24,7 @@ public class Drunkard {
         int winner = 0;
 
 
-        while (!(playerCardsIsEmpty(PLAYER_1) || playerCardsIsEmpty(PLAYER_2))) {
-
+       do {
             int cardTailPlayer1 = playersCards[PLAYER_1][playersCardTails[PLAYER_1]];
             int cardTailPlayer2 = playersCards[PLAYER_2][playersCardTails[PLAYER_2]];
 
@@ -62,6 +61,7 @@ public class Drunkard {
             playersCardTails[PLAYER_1] = incrementIndex(playersCardTails[PLAYER_1]);
             playersCardTails[PLAYER_2] = incrementIndex(playersCardTails[PLAYER_2]);
         }
+        while (!(playerCardsIsEmpty(PLAYER_1) || playerCardsIsEmpty(PLAYER_2)));
 
         if (winner == 1)
               log.info("Выиграл первый игрок. Количество произведенных итераций: {}", counter);
