@@ -48,30 +48,15 @@ public class BlackJack {
 
             initRound();
 
-            int finalSumPlayer;
+            int sumPlayer = getSumPlayer();
+            int sumComputer = getSumComputer();
 
-            do {
-                giveOneCard(PLAYER);
-                finalSumPlayer = getFinalSum(PLAYER);
-            }
-            while (finalSumPlayer != 0 && finalSumPlayer < MIN_VALUE_PLAYER || finalSumPlayer < MAX_VALUE
-            && finalSumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
+            log.info("Сумма ваших очков - {}, компьютера {} очков", sumPlayer,sumComputer);
 
-            int finalSumComputer;
-
-            do {
-                giveOneCard(COMPUTER);
-                finalSumComputer = getFinalSum(COMPUTER);
-            }
-            while (finalSumComputer != 0 && finalSumComputer < MIN_VALUE_COMP);
-
-            log.info("Сумма ваших очков - {}, компьютера {} очков", finalSumPlayer,finalSumComputer);
-
-            bankCalculation(finalSumPlayer, finalSumComputer);
+            bankCalculation(sumPlayer, sumComputer);
 
             log.info("У вас {}$, у компьютера {}$ ", playersMoney[PLAYER], playersMoney[COMPUTER]);
         }
-
         while (!moneyCheck());
 
         if (playersMoney[PLAYER] > 0)
@@ -79,6 +64,31 @@ public class BlackJack {
         else
             log.info("Вы проиграли. Соболезнуем...");
 
+    }
+
+    private static int getSumComputer() {
+        int sumComputer;
+
+        do {
+            giveOneCard(COMPUTER);
+            sumComputer = getFinalSum(COMPUTER);
+        }
+        while (sumComputer != 0 && sumComputer < MIN_VALUE_COMP);
+
+        return sumComputer;
+    }
+
+    private static int getSumPlayer() throws IOException {
+        int sumPlayer;
+
+        do {
+            giveOneCard(PLAYER);
+            sumPlayer = getFinalSum(PLAYER);
+        }
+        while (sumPlayer != 0 && sumPlayer < MIN_VALUE_PLAYER || sumPlayer < MAX_VALUE
+            && sumPlayer > MIN_VALUE_PLAYER && confirm("Берем еще ?"));
+
+        return sumPlayer;
     }
 
     private static void giveOneCard(int player) {
@@ -92,7 +102,7 @@ public class BlackJack {
 
     private static void bankCalculation(int sumPlayer, int sumComputer) {
         if (sumPlayer > sumComputer) {
-            log.info("Вы выиграли раунд, получаете {}$", BET);
+            log.info("Вы выиграли раунд, получаете " + BET + "$");
             playersMoney[PLAYER] += BET;
             playersMoney[COMPUTER] -= BET;
         } else if (sumPlayer == sumComputer) {
