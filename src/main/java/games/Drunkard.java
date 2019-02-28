@@ -21,7 +21,7 @@ public class Drunkard {
         init();
 
         int counter = 1;
-        int winner = 0;
+        int winner;
 
 
        do {
@@ -37,23 +37,18 @@ public class Drunkard {
 
             winner = moveWinner(getValueCard(cardTailPlayer1), getValueCard(cardTailPlayer2));
 
-            switch (winner) {
-
-                    case 1:
-                        log.info("Выиграл игрок №1\n");
-                        playerCardsAdd(PLAYER_1, cardTailPlayer1);
-                        playerCardsAdd(PLAYER_1, cardTailPlayer2);
-                        break;
-                    case -1:
-                        playerCardsAdd(PLAYER_2, cardTailPlayer2);
-                        playerCardsAdd(PLAYER_2, cardTailPlayer1);
-                        log.info("Выиграл игрок №2\n");
-                        break;
-                    case 0:
-                        playerCardsAdd(PLAYER_1, cardTailPlayer1);
-                        playerCardsAdd(PLAYER_2, cardTailPlayer2);
-                        log.info("Спор - каждый остается при своих\n");
-                        break;
+            if (winner > 0) {
+                log.info("Выиграл игрок №1\n");
+                playerCardsAdd(PLAYER_1, cardTailPlayer1);
+                playerCardsAdd(PLAYER_1, cardTailPlayer2);
+            } else if (winner == 0) {
+                log.info("Спор - каждый остается при своих\n");
+                playerCardsAdd(PLAYER_1, cardTailPlayer1);
+                playerCardsAdd(PLAYER_2, cardTailPlayer2);
+            } else {
+                log.info("Выиграл игрок №2\n");
+                playerCardsAdd(PLAYER_2, cardTailPlayer2);
+                playerCardsAdd(PLAYER_2, cardTailPlayer1);
             }
 
             counter++;
@@ -90,13 +85,8 @@ public class Drunkard {
     }
 
     private static int moveWinner(int cardPlayer1, int cardPlayer2) {
-
         int differenceOfValue = cardPlayer1 - cardPlayer2;
-
-        if (Math.abs(differenceOfValue) == 8)
-            return (differenceOfValue == 8) ? -1 : 1;
-        else
-            return Integer.compare(differenceOfValue, 0);
+        return Math.abs(differenceOfValue) == 8 ? -differenceOfValue : differenceOfValue;
     }
 
     private static int getValueCard(int cardNumber) {
